@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<%- layout("/layouts/boilerplate.ejs") %>
+
 <body>
     <form  method="post" action="/listings/<%= listing._id %>?_method=PUT">
+
         <input type="text" name="listing[title]"  value="<%= listing.title %>" >
         <br>
         <textarea name="listing[description]"  ><%= listing.description %></textarea>
         <br>
-        <input type="text" name="listing[image]" placeholder="<%= listing.image.url %>" >
+        <input type="text" name="listing[image]" value="<%= listing.image.url %>" >
         <br>
         <input type="number" name="listing[price]" value="<%= listing.price %>">
         <br>
@@ -22,4 +18,3 @@
         <button type="submit">Submit</button>
     </form>
 </body>
-</html>
