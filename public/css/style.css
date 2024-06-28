@@ -2,8 +2,14 @@
 // <weight>: Use a value from 200 to 800 */
 
 body{
-  font-family: "Plus Jakarta Sans", sans-serif !important;
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
+.container{
+    flex: 1;
 }
 
 
@@ -72,4 +78,19 @@ body{
 
 .card-text p{
     font-weight: 400;
+}
+
+.card-img-overlay{
+    opacity: 0;
+}
+.card-img-overlay:hover{
+    opacity: 0.15;
+    background-color: #e7e6e6;
+    border-radius: 10px;
+}
+/* new page button */
+.add-btn{
+    background-color: #fe424d !important;
+    border: none !important;
+    border-radius: 8px;
 }
