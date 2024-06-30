@@ -1,16 +1,26 @@
 <%- layout("/layouts/boilerplate.ejs") %>
 <body>
     <h3>Listing Details</h3>
-    <ul>
-        <li><%= listing.title %></li>
-        <li><%= listing.description %></li>
-        <li><img src="<%= listing.image.url %>" alt=""></li>
-        <li> &#x20b9;<%= listing.price.toLocaleString("en-IN") %></li>
-        <li><%= listing.location %></li>
-        <li><%= listing.country %></li>        
-    </ul>
-    <a href="/listings/<%= listing.id %>/edit">Edit Listing</a>
+    <div class="card" style="width: 29rem;">
+        <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 18rem;">
+        <div class="card-body">
+          <p class="card-text">
+            <b><%= listing.title %></b>
+            <br>
+            <%= listing.description %>
+            <br>
+            &#x20b9; <%= listing.price.toLocaleString("en-IN") %>
+            <br>
+            <%= listing.location %>
+            <br>
+            <%= listing.country %>       
+          </p>
+        </div>
+    </div>
+    <button class="add-btn"><a href="/listings/<%= listing.id %>/edit">Edit</a></button>
+    <br>
+    
     <form method="post" action="/listings/<%= listing._id %>?_method=DELETE">
-        <button>Delete this listing</button>
+        <button class="add-btn">Delete</button>
     </form>
 </body>
