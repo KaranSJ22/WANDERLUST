@@ -5,6 +5,7 @@ const Listing= require("./models/listing.js");
 const path=require("path");
 const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");
+const wrapAsync=require("./utilities/wrapAsync.js");
 
 // connecting and creating to wanderlust db
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
@@ -31,9 +32,7 @@ app.use(express.static(path.join(__dirname,"/public")));
 
 // server port settings
 
-app.listen(8080,()=>{
-    console.log("server running on port 8080");
-});
+
 
 app.get("/",(req,res)=>{
     res.send("Hi, I am root");
@@ -64,13 +63,14 @@ app.get("/listings/:id", async(req,res)=>{
 //new listing post route
 
 
-app.post("/listings", async(req,res)=>{
-    let newList= new Listing (req.body.listing);
-    console.log({...req.body.listing});
-    await newList.save();
-    // console.log(newList);
-    res.redirect("/listings");
-});
+
+app.post("/listings", wrapAsync(async(req,res,next)=>{
+        let newList= new Listing (req.body.listing);
+        console.log({...req.body.listing});
+        await newList.save();
+        // console.log(newList);
+        res.redirect("/listings");
+}));
 
 //edit route
 
@@ -95,6 +95,16 @@ app.delete("/listings/:id", async(req,res)=>{
     let deletedListing= await Listing.findByIdAndDelete(id);
     // console.log(deletedListing);
     res.redirect("/listings");
+});
+
+//middlewares
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).send('Something went wrong!');
+});
+
+app.listen(8080,()=>{
+    console.log("server running on port 8080");
 });
 
 
