@@ -7,6 +7,7 @@ const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");
 const wrapAsync=require("./utilities/wrapAsync.js");
 const ExpressError=require("./utilities/expressError.js");
+const {listingSchema}=require("./validationSchema.js");
 
 // connecting and creating to wanderlust db
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
@@ -63,12 +64,12 @@ app.get("/listings/:id", wrapAsync( async(req,res)=>{
 
 //new listing post route
 
-
-
 app.post("/listings", wrapAsync(async(req,res,next)=>{
-    if(!req.body.listing){
-        throw new ExpressError(400,"Send Valid request");
-    }
+    let result=listingSchema.validate(req.body);
+    console.log(result)
+    if(result.error){
+        throw new ExpressError(400,result.error);
+    };
     let newList= new Listing (req.body.listing);
     console.log({...req.body.listing});
     await newList.save();
