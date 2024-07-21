@@ -32,9 +32,17 @@ app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
-// server port settings
+// server port and middlewares
 
-
+const validateListing=(req,res,next)=>{
+    let {error}=listingSchema.validate(req.body);
+    console.log(error);
+    if(error){
+        throw new ExpressError(400,error);
+    }else{
+        next();
+    }
+}
 
 app.get("/",(req,res)=>{
     res.send("Hi, I am root");
@@ -64,12 +72,8 @@ app.get("/listings/:id", wrapAsync( async(req,res)=>{
 
 //new listing post route
 
-app.post("/listings", wrapAsync(async(req,res,next)=>{
-    let result=listingSchema.validate(req.body);
-    console.log(result)
-    if(result.error){
-        throw new ExpressError(400,result.error);
-    };
+app.post("/listings",validateListing, wrapAsync(async(req,res,next)=>{
+    
     let newList= new Listing (req.body.listing);
     console.log({...req.body.listing});
     await newList.save();
@@ -85,7 +89,7 @@ app.get("/listings/:id/edit", wrapAsync(async(req,res)=>{
     res.render("./listings/edit.ejs", {listing});
 }));
 
-app.put("/listings/:id", wrapAsync(async(req,res)=>{
+app.put("/listings/:id",validateListing, wrapAsync(async(req,res)=>{
     let {id}=req.params;
     // console.log({...req.body.listing});
     await Listing.findByIdAndUpdate(id,{...req.body.listing});
@@ -112,6 +116,7 @@ app.use((err, req, res, next) => {
    res.render("error.ejs",{statusCode,message});
     // res.status(statusCode).send(message);
 });
+
 
 app.listen(8080,()=>{
     console.log("server running on port 8080");
