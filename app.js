@@ -9,6 +9,7 @@ const ejsMate=require("ejs-mate");
 const wrapAsync=require("./utilities/wrapAsync.js");
 const ExpressError=require("./utilities/expressError.js");
 const {listingSchema}=require("./validationSchema.js");
+const {reviewSchema}=require("./validationSchema.js");
 
 // connecting and creating to wanderlust db
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
@@ -43,7 +44,7 @@ const validateListing=(req,res,next)=>{
     }else{
         next();
     }
-}
+};
 
 app.get("/",(req,res)=>{
     res.send("Hi, I am root");
@@ -108,7 +109,19 @@ app.delete("/listings/:id", wrapAsync(async(req,res)=>{
 }));
 
 //review port
-app.post("/listings/:id/reviews", async(req,res)=>{
+
+const validateReview= (req,res,next)=>{
+    let {error}=reviewSchema.validate(req.body);
+    console.log(error);
+    if(error){
+        throw new ExpressError(400,error);
+    }else{
+        next();
+    }
+
+}
+
+app.post("/listings/:id/reviews",validateReview, wrapAsync(async(req,res)=>{
     let listing=await Listing.findById(req.params.id);
     let newReview = new Review(req.body.review);
     listing.reviews.push(newReview);
@@ -116,7 +129,9 @@ app.post("/listings/:id/reviews", async(req,res)=>{
     await listing.save();
     // console.log(newReview);  
     res.redirect(`/listings/${listing._id}`);
-});
+}));
+
+
 
 //middlewares
 app.all("*",(req,res,next)=>{
@@ -124,12 +139,12 @@ app.all("*",(req,res,next)=>{
 });
 
 app.use((err, req, res, next) => {
-   let {statusCode=500 , message="somethin went wrong"}=err;
+   let {statusCode=500 , message="something went wrong"}=err;
    res.render("error.ejs",{statusCode,message});
     // res.status(statusCode).send(message);
 });
 
-
+//Main Port number
 
 app.listen(8080,()=>{
     console.log("server running on port 8080");

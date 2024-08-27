@@ -14,3 +14,9 @@ const Joi=require("joi");
 
     }).required(),
 });
+module.exports.reviewSchema=Joi.object({
+    review:Joi.object({
+        comment: Joi.string().required(),
+        rating: Joi.number().integer().required().min(1).max(5),
+    }).required()
+});
