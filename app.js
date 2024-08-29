@@ -46,11 +46,12 @@ const validateListing=(req,res,next)=>{
     }
 };
 
+// index route
+
 app.get("/",(req,res)=>{
     res.send("Hi, I am root");
 });
 
-// index route
 
 app.get("/listings", async(req,res)=>{
     const allListings= await Listing.find({});
@@ -121,13 +122,13 @@ const validateReview= (req,res,next)=>{
 
 }
 
-app.post("/listings/:id/reviews",validateReview, wrapAsync(async(req,res)=>{
+app.post("/listings/:id/reviews", validateReview, wrapAsync(async(req,res)=>{
     let listing=await Listing.findById(req.params.id);
     let newReview = new Review(req.body.review);
-    listing.reviews.push(newReview);
-    await newReview.save();
-    await listing.save();
-    // console.log(newReview);  
+    // listing.reviews.push(newReview);
+    // await newReview.save();
+    // await listing.save();
+    console.log(newReview);  
     res.redirect(`/listings/${listing._id}`);
 }));
 
