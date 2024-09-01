@@ -78,7 +78,7 @@ app.get("/listings/:id", wrapAsync( async(req,res)=>{
 app.post("/listings",validateListing, wrapAsync(async(req,res,next)=>{
     
     let newList= new Listing (req.body.listing);
-    console.log({...req.body.listing});
+    // console.log({...req.body.listing});
     await newList.save();
     // console.log(newList);
     res.redirect("/listings");
@@ -103,7 +103,7 @@ app.put("/listings/:id",validateListing, wrapAsync(async(req,res)=>{
 
 app.delete("/listings/:id", wrapAsync(async(req,res)=>{
     let {id}=req.params;
-    console.log(id);
+    // console.log(id);
     let deletedListing= await Listing.findByIdAndDelete(id);
     // console.log(deletedListing);
     res.redirect("/listings");
