@@ -36,25 +36,19 @@ app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
-// server port and middlewares
-
 
 // index route
 
 app.get("/",(req,res)=>{
     res.send("Hi, I am root");
 });
+//listing and review route
 
 app.use("/listings",listings); 
 app.use("/listings/:id/reviews",reviews);
 
-
-
-
-
-
-
 //middlewares
+
 app.all("*",(req,res,next)=>{
     next(new ExpressError(404,"Page Not Found"));
 });
@@ -65,67 +59,11 @@ app.use((err, req, res, next) => {
     // res.status(statusCode).send(message);
 });
 
-//Main Port number
+//Main port,server port
 
 app.listen(8080,()=>{
     console.log("server running on port 8080");
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // app.get("/testlistings", async(req,res)=>{
