@@ -12,6 +12,7 @@ const {listingSchema}=require("./validationSchema.js");
 const {reviewSchema}=require("./validationSchema.js");
 const listings=require("./routes/listing.js");
 const reviews=require("./routes/review.js");
+const cookieparser=require("cookie-parser");
 
 // connecting and creating to wanderlust db
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
@@ -41,6 +42,7 @@ app.use(express.static(path.join(__dirname,"/public")));
 
 app.get("/",(req,res)=>{
     res.send("Hi, I am root");
+    console.dir(req.cookies);
 });
 //listing and review route
 
