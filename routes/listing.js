@@ -8,6 +8,8 @@ const {listingSchema}=require("../validationSchema.js");
 const path=require("path");
 const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");
+const passport = require("passport");
+const {isLoggedIn}=require("../middleware.js");
 
 
 //app settings
@@ -38,7 +40,8 @@ router.get("/", async(req,res)=>{
 
 //new listing get route
 
-router.get("/new",(req,res)=>{
+router.get("/new",isLoggedIn,async(req,res)=>{
+    // console.log(req.user);
     res.render("listings/new.ejs");
 });
 
@@ -71,7 +74,7 @@ router.post("/",validateListing, wrapAsync(async(req,res,next)=>{
 
 //edit route update
 
-router.get("/:id/edit", wrapAsync(async(req,res)=>{
+router.get("/:id/edit",isLoggedIn, wrapAsync(async(req,res)=>{
     let {id}=req.params;
     const listing=  await Listing.findById(id);
     if (!listing) {
@@ -82,7 +85,7 @@ router.get("/:id/edit", wrapAsync(async(req,res)=>{
     };
 }));
 
-router.put("/:id",validateListing, wrapAsync(async(req,res)=>{
+router.put("/:id",isLoggedIn,validateListing, wrapAsync(async(req,res)=>{
     let {id}=req.params;
     // console.log({...req.body.listing});
     await Listing.findByIdAndUpdate(id,{...req.body.listing});
@@ -92,7 +95,7 @@ router.put("/:id",validateListing, wrapAsync(async(req,res)=>{
 
 //delete route
 
-router.delete("/:id", wrapAsync(async(req,res)=>{
+router.delete("/:id",isLoggedIn, wrapAsync(async(req,res)=>{
     let {id}=req.params;
     // console.log(id);
     let deletedListing= await Listing.findByIdAndDelete(id);
