@@ -5,6 +5,7 @@ const ExpressError=require("../utilities/expressError.js");
 const Review= require("../models/review.js");
 const Listing= require("../models/listing.js");
 const {reviewSchema}=require("../validationSchema.js");
+const {validateReview, isLoggedIn}=require("../middleware.js");
 // const path=require("path");
 // const methodOverride=require("method-override");
 // const ejsMate=require("ejs-mate");
@@ -19,20 +20,11 @@ const {reviewSchema}=require("../validationSchema.js");
 // app.engine("ejs",ejsMate);
 // app.use(express.static(path.join(__dirname,"/public")));
 
-//review port
+//review portk22j
 
-const validateReview= (req,res,next)=>{
-    let {error}=reviewSchema.validate(req.body);
-    console.log(error);
-    if(error){
-        throw new ExpressError(400,error);
-    }else{
-        next();
-    }
 
-}
 
-router.post("/", validateReview, wrapAsync(async(req,res)=>{
+router.post("/",isLoggedIn, validateReview, wrapAsync(async(req,res)=>{
     let listing=await Listing.findById(req.params.id);
     let newReview = new Review(req.body.review);
     listing.reviews.push(newReview);

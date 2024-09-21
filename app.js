@@ -51,14 +51,14 @@ app.get("/",(req,res)=>{
     res.send("Hi, I am root");
     console.dir(req.cookies);
 });
-app.get("/demouser",async(req,res)=>{
-    let fakeUser=new User({
-        email:"abc@gmail.com",
-        username:"KaranSJ",
-    });
-   let registeredUser= await User.register(fakeUser,"helloworld");
-   res.send(registeredUser);
-});
+// app.get("/demouser",async(req,res)=>{
+//     let fakeUser=new User({
+//         email:"abc@gmail.com",
+//         username:"KaranSJ",
+//     });
+//    let registeredUser= await User.register(fakeUser,"helloworld");
+//    res.send(registeredUser);
+// });
 
 //app settings
 

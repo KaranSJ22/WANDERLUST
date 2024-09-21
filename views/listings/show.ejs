@@ -5,7 +5,7 @@
         <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 18rem;">
         <div class="card-body">
           <p class="card-text">
-            
+            <i><%= listing.owner.username %></i>
             <br>
             <%= listing.description %>
             <br>
@@ -17,12 +17,15 @@
           </p>
         </div>
     </div>
-    <button class="add-btn"><a href="/listings/<%= listing.id %>/edit">Edit</a></button>
-    <br>
     
-    <form method="post" action="/listings/<%= listing._id %>?_method=DELETE">
-        <button class="add-btn">Delete</button>
-    </form>
+
+      <button class="add-btn"><a href="/listings/<%= listing.id %>/edit">Edit</a></button>
+      <br>
+      
+      <form method="post" action="/listings/<%= listing._id %>?_method=DELETE">
+          <button class="add-btn">Delete</button>
+      </form>
+
     <div class="col-8 offset-3 mb-3">
       <hr />
       <h4> Leave a Review</h4>
