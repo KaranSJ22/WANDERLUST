@@ -21,29 +21,26 @@ const listingController=require("../controllers/listings.js");
 // app.use(express.static(path.join(__dirname,"/public")));
 //
 
-
-// index, LISTING Routes
-
-router.get("/",wrapAsync(listingController.index));
-
+router.route("/")
+.get(wrapAsync(listingController.index))
+.post(validateListing, wrapAsync(listingController.newList));
 //new listing get route
 
 router.get("/new",isLoggedIn,wrapAsync(listingController.newListForm));
 
 //show route
-
-router.get("/:id", wrapAsync(listingController.showList));
+router.route("/:id")
+.get(wrapAsync(listingController.showList))
+.put(isLoggedIn,isOwner,validateListing, wrapAsync(listingController.editUpdate))
+.delete(isLoggedIn,isOwner, wrapAsync(listingController.deleteList));
 
 //new listing post route
 
-router.post("/",validateListing, wrapAsync(listingController.newList));
 
 //edit route update
 router.get("/:id/edit",isLoggedIn,isOwner, wrapAsync(listingController.editForm));
 
-router.put("/:id",isLoggedIn,isOwner,validateListing, wrapAsync(listingController.editUpdate));
 
 //delete route
-router.delete("/:id",isLoggedIn,isOwner, wrapAsync(listingController.deleteList));
 
 module.exports=router;
