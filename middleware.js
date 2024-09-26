@@ -1,4 +1,5 @@
 const Listing=require("./models/listing");
+const Review = require("./models/review.js");
 const ExpressError=require("./utilities/expressError.js"); 
 const {listingSchema}=require("./validationSchema.js");
 const {reviewSchema}=require("./validationSchema.js");
@@ -6,7 +7,7 @@ const {reviewSchema}=require("./validationSchema.js");
 
 
 module.exports.isLoggedIn=(req,res,next)=>{
-    console.log(req.originalUrl);
+    // console.log(req.originalUrl);
     if(!req.isAuthenticated()){
         req.session.redirectUrl=req.originalUrl;
         req.flash("error","You Must Login");
@@ -40,6 +41,16 @@ module.exports.validateListing=(req,res,next)=>{
         next();
     }
 };
+
+module.exports.isAuthor=async (req,res,next) => {
+    let {id,reviewId}=req.params;
+    let review=await Review.findById(reviewId);
+    if(!review.author.equals(res.locals.currUser._id)){
+        req.flash("error","you are not the author of this review");
+        return res.redirect(`/listings/${id}`);
+    }
+    next();
+}
 
 module.exports.validateReview= (req,res,next)=>{
     let {error}=reviewSchema.validate(req.body);

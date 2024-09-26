@@ -5,13 +5,12 @@ const ExpressError=require("../utilities/expressError.js");
 const Review= require("../models/review.js");
 const Listing= require("../models/listing.js");
 const {reviewSchema}=require("../validationSchema.js");
-const {validateReview, isLoggedIn}=require("../middleware.js");
+const {validateReview, isLoggedIn, isAuthor}=require("../middleware.js");
+const reviewController=require("../controllers/reviews.js");
+
 // const path=require("path");
-// const methodOverride=require("method-override");
 // const ejsMate=require("ejs-mate");
-
-
-
+// const methodOverride=require("method-override");
 //app settings
 // app.set("view engine","ejs");
 // app.set("views", path.join(__dirname,"views"));
@@ -22,25 +21,8 @@ const {validateReview, isLoggedIn}=require("../middleware.js");
 
 //review portk22j
 
+router.post("/",isLoggedIn, validateReview, wrapAsync(reviewController.postReview));
 
-
-router.post("/",isLoggedIn, validateReview, wrapAsync(async(req,res)=>{
-    let listing=await Listing.findById(req.params.id);
-    let newReview = new Review(req.body.review);
-    listing.reviews.push(newReview);
-    await newReview.save();
-    await listing.save();
-    // console.log(newReview);  
-    req.flash("success","Review Created");
-    res.redirect(`/listings/${listing._id}`);
-}));
-
-router.delete("/:reviewId",wrapAsync(async(req,res)=>{
-    let {id, reviewId}=req.params;
-    await Listing.findByIdAndUpdate(id, {$pull:{reviews :reviewId}});
-    await Review.findByIdAndDelete(reviewId);
-    req.flash("success","Review deleted");
-    res.redirect(`/listings/${id}`);
-}));
+router.delete("/:reviewId",isLoggedIn,isAuthor,wrapAsync(reviewController.destroyReview)); 
 
 module.exports=router;
