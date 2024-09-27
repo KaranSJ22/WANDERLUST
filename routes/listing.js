@@ -24,6 +24,7 @@ const listingController=require("../controllers/listings.js");
 router.route("/")
 .get(wrapAsync(listingController.index))
 .post(validateListing, wrapAsync(listingController.newList));
+
 //new listing get route
 
 router.get("/new",isLoggedIn,wrapAsync(listingController.newListForm));
@@ -34,13 +35,12 @@ router.route("/:id")
 .put(isLoggedIn,isOwner,validateListing, wrapAsync(listingController.editUpdate))
 .delete(isLoggedIn,isOwner, wrapAsync(listingController.deleteList));
 
-//new listing post route
 
 
 //edit route update
 router.get("/:id/edit",isLoggedIn,isOwner, wrapAsync(listingController.editForm));
 
 
-//delete route
+
 
 module.exports=router;

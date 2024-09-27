@@ -42,7 +42,6 @@ module.exports.logout=async(req,res,next)=>{
             return next(err);
         }
         req.flash("success","Logged Out!");
-        // req.flash("error","Couldn't logout!");
         res.redirect("/listings");
-    })
+    });
 };
