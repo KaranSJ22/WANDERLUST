@@ -23,7 +23,7 @@ const listingController=require("../controllers/listings.js");
 
 router.route("/")
 .get(wrapAsync(listingController.index))
-.post(validateListing, wrapAsync(listingController.newList));
+.post(isLoggedIn,validateListing, wrapAsync(listingController.newList));
 
 //new listing get route
 
