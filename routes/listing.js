@@ -11,7 +11,10 @@ const ejsMate=require("ejs-mate");
 const passport = require("passport");
 const {isLoggedIn, isOwner,validateListing}=require("../middleware.js");
 const listingController=require("../controllers/listings.js");
-
+const multer=require("multer");
+const {storage}=require("../cloudConfig.js");
+const upload=multer({storage});
+// console.log(storage);
 //app settings
 // app.set("view engine","ejs");
 // app.set("views", path.join(__dirname,"views"));
@@ -23,7 +26,12 @@ const listingController=require("../controllers/listings.js");
 
 router.route("/")
 .get(wrapAsync(listingController.index))
-.post(isLoggedIn,validateListing, wrapAsync(listingController.newList));
+.post(isLoggedIn,upload.single("listing[image][url]"), wrapAsync(listingController.newList));
+
+// .post((req,res)=>{
+//     res.send(req.file);
+//     console.log(req.body);
+// });
 
 //new listing get route
 
@@ -32,7 +40,7 @@ router.get("/new",isLoggedIn,wrapAsync(listingController.newListForm));
 //show route
 router.route("/:id")
 .get(wrapAsync(listingController.showList))
-.put(isLoggedIn,isOwner,validateListing, wrapAsync(listingController.editUpdate))
+.put(isLoggedIn,isOwner,upload.single("listing[image][url]"), wrapAsync(listingController.editUpdate))
 .delete(isLoggedIn,isOwner, wrapAsync(listingController.deleteList));
 
 

@@ -1,5 +1,7 @@
 <%- layout("/layouts/boilerplate.ejs") %>
-
+<script>
+  const map_token="<%=process.env.MAP_TOKEN %>";
+</script>
     <h3><%= listing.title %></h3>
     <div class="card listing-card" style="width: 29rem;">
         <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 18rem;">
@@ -58,21 +60,28 @@
         </div>
       </form>
       <hr>
-      <p><b>All Reviews</b></p>
-      <div class="row">
-      <% for(review of listing.reviews) { %>
-            <div class="card col-5 ms-3 mb-3">
-              <div class="card-body">
-               <h5 class="card-title"><%=review.author.username %></h5>
-               <p class="starability-result card-text" data-rating="<%=review.rating%>"></p>
-               <p class="card-text"><%= review.comment %></p>
-            </div>
-              <form action="/listings/<%= listing._id %>/reviews/<%=review._id %>?_method=DELETE" method="post">
-                <button class="btn btn-sm btn-dark">Delete</button>
-              </form>
-            </div>
+      <% if (listing.reviews.length>0) { %>
+        <div class="row">
+          <p><b>All Reviews</b></p>
+          <% for(review of listing.reviews) { %>
+              <div class="card col-5 ms-3 mb-3">
+                <div class="card-body">
+                 <h5 class="card-title"><%=review.author.username %></h5>
+                 <p class="starability-result card-text" data-rating="<%=review.rating%>"></p>
+                 <p class="card-text"><%= review.comment %></p>
+                </div>
+                <form action="/listings/<%= listing._id %>/reviews/<%=review._id %>?_method=DELETE" method="post">
+                  <button class="btn btn-sm btn-dark">Delete</button>
+                </form>
+              </div>
+        <% } %>
+      </div>
       <% } %>
+    <div class="col-7 offset-3 mb-3"> 
+      <h3>Where you will be</h3>
+      <div id="map"></div>
     </div>
-    </div>
+  </div>
+  <script src="/js/map.js"></script>
     
 

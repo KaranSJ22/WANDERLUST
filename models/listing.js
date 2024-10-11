@@ -11,12 +11,9 @@ const listingSchema= new Schema({
     image:{
         filename: {
             type:String,
-            default:"listingimage"
         },
         url:{
             type:String,
-            default:"https://tinyurl.com/uc37ux9c",
-            set: (v) => v==="" ? "https://tinyurl.com/uc37ux9c" : v,
         }
     },
     price:Number,
