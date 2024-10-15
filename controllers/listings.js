@@ -1,5 +1,9 @@
 const Listing=require("../models/listing");
 const cloudinary=require("../cloudConfig");
+const mbxTilesets = require('@mapbox/mapbox-sdk/services/tilesets');
+const mbxGeocoding=require("@mapbox/mapbox-sdk/services/geocoding");
+const mapToken=process.env.MAP_TOKEN;
+const geocodingClient=mbxGeocoding({ accessToken:mapToken});
 //index
 module.exports.index=async(req,res)=>{
     const allListings= await Listing.find({});
@@ -14,16 +18,21 @@ module.exports.newListForm=async(req,res)=>{
 
 //newList post
 module.exports.newList=async(req,res,next)=>{
+    let response=await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1,
+      }).send();
     let url=req.file.path;
     let filename=req.file.filename;
     // console.log(url,filename);
     let newList= new Listing (req.body.listing);
     newList.owner=req.user._id;
     newList.image={url,filename};
-    await newList.save();
+    newList.geometry=response.body.features[0].geometry;
+    let saved=await newList.save();
+    console.log(saved);
     req.flash("success","New Listing Added Successfully!");
     res.redirect("/listings");
-    // // console.log(newList);
     // console.log({...req.body.listing});
 };
 
@@ -56,8 +65,14 @@ module.exports.editForm=async(req,res)=>{
 
 //edit form update
 module.exports.editUpdate=async(req,res)=>{
+    let response=await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1,
+      }).send();
     let {id}=req.params;
     let listing=await Listing.findByIdAndUpdate(id,{...req.body.listing});
+        listing.geometry=response.body.features[0].geometry;
+        await listing.save();
     if(typeof req.file !=="undefined"){
         let url=req.file.path;
         let filename=req.body.filename;

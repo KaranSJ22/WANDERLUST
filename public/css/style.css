@@ -106,3 +106,22 @@ body{
     height: 300px;
     width: 400px;
 }
+
+/* S Css */
+.rounded-button {
+    background-color: #f7f7f7; /* Light grey background */
+    color: #000; /* Black text */
+    border: none; /* No border */
+    border-radius: 20px; /* Rounded edges */
+    padding: 10px 20px; /* Padding for size */
+    font-size: 16px; /* Font size */
+    font-weight: 500; /* Medium font weight */
+    /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); Light shadow for depth */
+    cursor: pointer; /* Pointer cursor */
+  }
+  
+  .rounded-button:hover {
+    background-color: #eaeaea; /* Slightly darker on hover */
+  }
+  /* search bar */
+  

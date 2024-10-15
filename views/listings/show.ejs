@@ -1,6 +1,8 @@
 <%- layout("/layouts/boilerplate.ejs") %>
 <script>
   const map_token="<%=process.env.MAP_TOKEN %>";
+  const coordinates= <%-JSON.stringify(listing.geometry.coordinates)%> ;
+
 </script>
     <h3><%= listing.title %></h3>
     <div class="card listing-card" style="width: 29rem;">
